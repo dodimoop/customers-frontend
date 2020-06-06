@@ -2,7 +2,7 @@
 
 **Note: Before you clone this project, you must clone this project `https://github.com/dodimoop/customers-backend**
 
-**Because this project is related to the `https://github.com/dodimoop/customers-backend` project**
+**Because this project is related to the `git clone https://github.com/dodimoop/customers-backend` project**
 
 **Follow the steps below:**
 1. You can clone this project (use HTTPS) and run `https://github.com/dodimoop/customers-frontend.git` on your terminal
