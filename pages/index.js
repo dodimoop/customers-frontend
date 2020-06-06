@@ -31,6 +31,7 @@ import Axios from 'axios'
 import dateFormat from 'dateformat'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { isEmpty } from 'lodash'
 
 import {
   VerifiedUserOutlined as VerifiedUserOutlinedIcon,
@@ -40,7 +41,7 @@ import {
   Close as CloseIcon,
   PersonAddOutlined as PersonAddOutlinedIcon
 } from '@material-ui/icons/'
-
+import NotFoundImage from '../src/notFound.svg'
 import Style from '../src/style'
 
 const Index = () => {
@@ -60,20 +61,20 @@ const Index = () => {
   const [customerEdit, setCustomerEdit] = useState({})
   const [openEdit, setOpenEdit] = useState(false)
 
+  // fetch Customer
+  const fetchCustomer = async () => {
+    try {
+      const response = await Axios.get('http://localhost:5000/api/v1/customers')
+      setCustomers(response.data.result)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   // Use Effect
   useEffect(() => {
-    const fetchCustomer = async () => {
-      try {
-        const response = await Axios.get(
-          'http://localhost:5000/api/v1/customers'
-        )
-        setCustomers(response.data.result)
-      } catch (error) {
-        console.log(error)
-      }
-    }
     fetchCustomer()
-  }, [customers])
+  }, [])
 
   // onClick Delete Button Icon
   const isDeleteIcon = customer => {
@@ -96,6 +97,7 @@ const Index = () => {
       `http://localhost:5000/api/v1/customers/${validation.id}`
     )
     setMessage(removeCustomer.data.status.message)
+    fetchCustomer()
     setOpen(false)
   }
 
@@ -140,6 +142,7 @@ const Index = () => {
         )
         setOnAddCustomer(false)
         setMessage(sentAddDataCustomer.data.status.message)
+        fetchCustomer()
         setOpenSnackbar(true)
       } else {
         const sentDataEdit = await Axios.put(
@@ -147,6 +150,7 @@ const Index = () => {
           values
         )
         setOpenEdit(false)
+        fetchCustomer()
         setMessage(sentDataEdit.data.status.message)
         setOpenSnackbar(true)
       }
@@ -180,52 +184,67 @@ const Index = () => {
         </Toolbar>
       </AppBar>
       <div style={{ padding: 20 }}>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">No.</TableCell>
-                <TableCell align="center">Name</TableCell>
-                <TableCell align="center">Email</TableCell>
-                <TableCell align="center">Gender</TableCell>
-                <TableCell align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {customers.map((customer, idx) => (
-                <TableRow key={customer.id}>
-                  <TableCell align="center">{idx + 1}</TableCell>
-                  <TableCell align="center">{customer.name}</TableCell>
-                  <TableCell align="center">{customer.email}</TableCell>
-                  <TableCell align="center">{customer.gender}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      aria-label="view detail customer"
-                      className={classes.visibilityIcon}
-                      onClick={() => isViewDetail(customer)}
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="view detail customer"
-                      className={classes.editIcon}
-                      onClick={() => isEditCustomer(customer)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="remove customer"
-                      className={classes.deleteForeverIcon}
-                      onClick={() => isDeleteIcon(customer)}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </TableCell>
+        {isEmpty(customers) ? (
+          <>
+            <img
+              src={NotFoundImage}
+              alt="not found"
+              className={classes.notFoundImage}
+            />
+            <p className={classes.paragraphNotFound}>
+              Oooops sorry, data not found...
+              <br />
+              Please Add Customer
+            </p>
+          </>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">No.</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Email</TableCell>
+                  <TableCell align="center">Gender</TableCell>
+                  <TableCell align="center">Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {customers.map((customer, idx) => (
+                  <TableRow key={customer.id}>
+                    <TableCell align="center">{idx + 1}</TableCell>
+                    <TableCell align="center">{customer.name}</TableCell>
+                    <TableCell align="center">{customer.email}</TableCell>
+                    <TableCell align="center">{customer.gender}</TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        aria-label="view detail customer"
+                        className={classes.visibilityIcon}
+                        onClick={() => isViewDetail(customer)}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="view detail customer"
+                        className={classes.editIcon}
+                        onClick={() => isEditCustomer(customer)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="remove customer"
+                        className={classes.deleteForeverIcon}
+                        onClick={() => isDeleteIcon(customer)}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </div>
 
       {/* Dialog */}

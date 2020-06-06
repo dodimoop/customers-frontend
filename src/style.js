@@ -25,6 +25,16 @@ const useStyles = makeStyles(theme => ({
   toolbarDiv: {
     display: 'flex',
     alignItems: 'center'
+  },
+  notFoundImage: {
+    marginTop: 55,
+    width: '100%',
+    height: 500
+  },
+  paragraphNotFound: {
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 20
   }
 }))
 
