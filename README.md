@@ -1,6 +1,5 @@
 ### My Customers
 
-**Follow the steps below:**
 **Note: before you clone this project, you must clone this project `https://github.com/dodimoop/customers-backend.**
 
 **Because this project is related to the `https://github.com/dodimoop/customers-backend project.`**
