@@ -9,7 +9,7 @@
     "clsx": "latest",
     "dateformat": "^3.0.3",
     "formik": "^2.1.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "material-table": "^1.59.0",
     "next": "latest",
     "next-images": "^1.4.0",
